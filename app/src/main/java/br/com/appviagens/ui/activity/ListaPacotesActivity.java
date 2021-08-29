@@ -1,5 +1,7 @@
 package br.com.appviagens.ui.activity;
 
+import static br.com.appviagens.ui.activity.PacoteActivityConstants.CHAVE_PACOTE;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -24,14 +26,21 @@ public class ListaPacotesActivity extends AppCompatActivity {
 
         setTitle(TITULO_APPBAR);
         configuraLista();
-
-        Intent intent = new Intent(this, PagamentoActivity.class);
-        startActivity(intent);
     }
 
     private void configuraLista() {
         ListView listaDePacotes = findViewById(R.id.lista_pacotes_listview);
-        List<Pacote> pacotes = new PacoteDAO().lista();
+        final List<Pacote> pacotes = new PacoteDAO().lista();
         listaDePacotes.setAdapter(new ListaPacotesAdapter(pacotes, this));
+        listaDePacotes.setOnItemClickListener((adapterView, view, posicao, id) -> {
+            Pacote pacoteClicado = pacotes.get(posicao);
+            vaiParaResumoPacote(pacoteClicado);
+        });
+    }
+
+    private void vaiParaResumoPacote(Pacote pacoteClicado) {
+        Intent intent = new Intent(ListaPacotesActivity.this, ResumoPacoteActivity.class);
+        intent.putExtra(CHAVE_PACOTE, pacoteClicado);
+        startActivity(intent);
     }
 }
